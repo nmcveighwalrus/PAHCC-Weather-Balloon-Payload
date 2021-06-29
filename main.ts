@@ -18,7 +18,7 @@ function gpsRead () {
     GPS_Array = RawGPS.split(",")
 }
 let wireLatch = 0
-let arm = ""
+let arm = 0
 let packet = ""
 let long = ""
 let lat = ""
@@ -88,11 +88,11 @@ basic.forever(function () {
             `)
         gpsRead()
         getTime()
-        serial.writeLine("" + (0))
+        serial.writeLine("" + time + timeZone + "Target ALT: " + targetAlt + "M")
         basic.showNumber(targetAlt)
     }
     if (input.buttonIsPressed(Button.AB)) {
-        arm = "" + time + timeZone + "Target ALT: " + targetAlt + "M"
+        arm = 1
         basic.showLeds(`
             # . . . #
             . # # # .
