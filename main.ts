@@ -1,4 +1,11 @@
 function getTime () {
+    basic.showLeds(`
+        . # # # .
+        # . . # #
+        # . # . #
+        # . . . #
+        . # # # .
+        `)
     gpsRead()
     rawTime = parseFloat(GPS_Array[1])
     time = rawTime + timeDif
@@ -7,6 +14,13 @@ function getTime () {
     }
 }
 function gpsRead () {
+    basic.showLeds(`
+        . # # # .
+        . . # . .
+        # . . . #
+        . # . # .
+        . # # # .
+        `)
     for (let index = 0; index <= 7; index++) {
         inString = serial.readUntil(serial.delimiters(Delimiters.NewLine))
         if (inString.includes("$GPGGA")) {
@@ -57,13 +71,43 @@ basic.forever(function () {
         long = "" + GPS_Array[4] + GPS_Array[5]
         basic.pause(100)
         packet = "" + time + timeZone + lat + ", " + long + ", " + Altitude + "M, " + temp + " °C, " + press + " kPa, " + RawGPS
+        basic.pause(100)
+        radio.sendNumber(0)
+        basic.pause(100)
+        radio.sendString("" + (time))
+        basic.pause(100)
+        radio.sendNumber(1)
+        basic.pause(100)
+        radio.sendString(lat)
+        basic.pause(100)
+        radio.sendNumber(2)
+        basic.pause(100)
+        radio.sendString(long)
+        basic.pause(100)
+        radio.sendNumber(3)
+        basic.pause(100)
+        radio.sendString("" + (Altitude))
+        basic.pause(100)
+        radio.sendNumber(4)
+        basic.pause(100)
+        radio.sendString("" + (temp))
+        basic.pause(100)
+        radio.sendNumber(5)
+        basic.pause(100)
+        radio.sendString("" + (press))
+        basic.pause(100)
     } else {
+        basic.showLeds(`
+            . . . . .
+            . # . # .
+            . . . . .
+            . # # # .
+            # . . . #
+            `)
         packet = "Invalid packet: " + RawGPS
+        radio.sendNumber(6)
     }
     serial.writeLine(packet)
-    basic.pause(100)
-    radio.sendString(packet)
-    basic.pause(100)
     if (input.buttonIsPressed(Button.B)) {
         pins.digitalWritePin(DigitalPin.P15, 1)
         basic.showLeds(`
