@@ -49,7 +49,7 @@ let timeDif = 0
 radio.setTransmitPower(7)
 radio.setGroup(2)
 serial.redirect(
-SerialPin.P13,
+SerialPin.P15,
 SerialPin.P1,
 BaudRate.BaudRate9600
 )
